@@ -1,4 +1,4 @@
-# Rust Book API 🚀
+# Rust Book App 🚀
 
 An example for writing a CRUD app using `warp` and `tokio-postgres`.
 
