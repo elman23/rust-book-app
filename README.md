@@ -27,7 +27,7 @@ For the application to run, a PostgreSQL database is needed.
 Deploy a PostgreSQL instance locally with Docker:
 
 ```
-docker run -it -d -p 5432:5432 -e POSTGRES_USER: postgres -e POSTGRES_PASSWORD: postgres -e POSTGRES_DB: postgres --name postgres postgres:latest
+docker run -it -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=postgres --name postgres postgres:latest
 ```
 
 ### 3. 🏗️ Build project
