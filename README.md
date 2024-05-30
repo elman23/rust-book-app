@@ -2,7 +2,10 @@
 
 An example for writing a CRUD app using `warp` and `tokio-postgres`.
 
-Inspired by [this app](https://github.com/zupzup/warp-postgres-example).
+Inspired by:
+
+- [this Rust API with Postgres app](https://github.com/zupzup/warp-postgres-example),
+- [this Rust JWT authentication app](https://github.com/zupzup/rust-jwt-example).
 
 ## 🏁 A simple API using Rust + PostgreSQL
 
