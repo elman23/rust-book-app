@@ -46,6 +46,14 @@ This will build the app in **release** mode. After running the project:
 cargo run
 ```
 
+### Login
+
+```bash
+curl http://localhost:8000/login -d '{"email": "user@userland.com", "pw": "1234"}' -H 'Content-Type: application/json'
+
+{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVzZXIiLCJleHAiOjE2MDMxMzQwODl9.dWnt5vfcGdwypEQUr3bLMrZYfdyxj3v6-io6VREWHXebMUCKBddf9xGcz4vHrCXruzx42zrS3Kygiqw3xV8W-A"}
+```
+
 ### 4. 🧪 Testing the CRUD Endpoints
 
 To test the endpoints, you can use **Postman**: the collections are in the [Rust Book API](Rust Book API.postman_collection.json) file.
@@ -66,8 +74,8 @@ Alternatively, you can test the API via command line with **curl**.
 Command:
 
 ```bash
-curl -i -H "Content-Type: application/json" -X POST http://127.0.0.1:8080/book -d '{"title": "Test title", "author": "Test author"}'
-curl -i -H "Content-Type: application/json" -X POST http://127.0.0.1:8080/book -d '{"title": "Another title", "author": "Another author"}'
+curl -i -H "Content-Type: application/json" -H 'Authorization: Bearer [JWT_TOKEN_HERE]' -X POST http://127.0.0.1:8080/book -d '{"title": "Test title", "author": "Test author"}'
+curl -i -H "Content-Type: application/json" -H 'Authorization: Bearer [JWT_TOKEN_HERE]' -X POST http://127.0.0.1:8080/book -d '{"title": "Another title", "author": "Another author"}'
 ```
 
 #### 4.2 📝 Checking created user with ID
@@ -75,7 +83,7 @@ curl -i -H "Content-Type: application/json" -X POST http://127.0.0.1:8080/book -
 Command:
 
 ```bash
-curl -i -H "Content-Type: application/json" -X GET http://127.0.0.1:8080/book/1
+curl -i -H "Content-Type: application/json" -H 'Authorization: Bearer [JWT_TOKEN_HERE]' -X GET http://127.0.0.1:8080/book/1
 ```
 
 #### 4.3 📝 Updating user data
@@ -83,7 +91,7 @@ curl -i -H "Content-Type: application/json" -X GET http://127.0.0.1:8080/book/1
 Command:
 
 ```bash
-curl -i -H "Content-Type: application/json" -X PUT http://127.0.0.1:8080/book/1 -d '{"title": "Another title", "author": "Another author"}'
+curl -i -H "Content-Type: application/json" -H 'Authorization: Bearer [JWT_TOKEN_HERE]' -X PUT http://127.0.0.1:8080/book/1 -d '{"title": "Another title", "author": "Another author"}'
 ```
 
 #### 4.4 📝 Checking all registered book
@@ -91,7 +99,7 @@ curl -i -H "Content-Type: application/json" -X PUT http://127.0.0.1:8080/book/1 
 Command:
 
 ```bash
-curl -i -H "Content-Type: application/json" -X GET http://127.0.0.1:8080/book
+curl -i -H "Content-Type: application/json" -H 'Authorization: Bearer [JWT_TOKEN_HERE]' -X GET http://127.0.0.1:8080/book
 ```
 
 Expected answer:
@@ -101,8 +109,8 @@ Expected answer:
 Command:
 
 ```bash
-curl -i -H "Content-Type: application/json" -X DELETE http://127.0.0.1:8080/book/1
-curl -i -H "Content-Type: application/json" -X DELETE http://127.0.0.1:8080/book/2
+curl -i -H "Content-Type: application/json" -H 'Authorization: Bearer [JWT_TOKEN_HERE]' -X DELETE http://127.0.0.1:8080/book/1
+curl -i -H "Content-Type: application/json" -H 'Authorization: Bearer [JWT_TOKEN_HERE]' -X DELETE http://127.0.0.1:8080/book/2
 ```
 
 **Enjoy!** :tropical_drink:
