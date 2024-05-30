@@ -2,7 +2,7 @@ use mobc_postgres::tokio_postgres;
 use serde_derive::Serialize;
 use std::convert::Infallible;
 use thiserror::Error;
-use warp::{http::StatusCode, Rejection, Reply};
+use warp::{filters::ws::Message, http::StatusCode, Rejection, Reply};
 
 #[derive(Error, Debug)]
 pub enum Error {
@@ -14,11 +14,26 @@ pub enum Error {
     DBInitError(tokio_postgres::Error),
     #[error("Error reading file: {0}")]
     ReadFileError(#[from] std::io::Error),
+    #[error("wrong credentials")]
+    WrongCredentialsError,
+    #[error("jwt token not valid")]
+    JWTTokenError,
+    #[error("jwt token creation error")]
+    JWTTokenCreationError,
+    #[error("no auth header")]
+    NoAuthHeaderError,
+    #[error("invalid auth header")]
+    InvalidAuthHeaderError,
+    #[error("no permission")]
+    NoPermissionError,
+    #[error("generic error")]
+    GenericError,
 }
 
 #[derive(Serialize)]
 struct ErrorResponse {
     message: String,
+    status: String,
 }
 
 impl warp::reject::Reject for Error {}
@@ -39,6 +54,26 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 code = StatusCode::BAD_REQUEST;
                 message = "Could not execute request";
             }
+            Error::WrongCredentialsError => {
+                code = StatusCode::FORBIDDEN;
+                message = "Forbidden";
+            }
+            Error::NoPermissionError => {
+                code = StatusCode::UNAUTHORIZED;
+                message = "Unauthorized";
+            }
+            Error::JWTTokenError => {
+                code = StatusCode::UNAUTHORIZED;
+                message = "Unauthorized"
+            }
+            Error::JWTTokenCreationError => {
+                code = StatusCode::INTERNAL_SERVER_ERROR;
+                message = "Internal Server Error";
+            }
+            Error::GenericError => {
+                code = StatusCode::INTERNAL_SERVER_ERROR;
+                message = "Generic Error";
+            }
             _ => {
                 eprintln!("Unhandled application error: {:?}", err);
                 code = StatusCode::INTERNAL_SERVER_ERROR;
@@ -56,6 +91,7 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
 
     let json = warp::reply::json(&ErrorResponse {
         message: message.into(),
+        status: code.to_string(),
     });
 
     Ok(warp::reply::with_status(json, code))

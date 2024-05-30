@@ -12,7 +12,7 @@ pub async fn health_handler(db_pool: DBPool) -> Result<impl Reply> {
     Ok(StatusCode::OK)
 }
 
-pub async fn list_books_handler(db_pool: DBPool) -> Result<impl Reply> {
+pub async fn list_books_handler(uid: String, db_pool: DBPool) -> Result<impl Reply> {
     let books = db::fetch_books(&db_pool)
         .await
         .map_err(|e| reject::custom(e))?;
@@ -21,14 +21,18 @@ pub async fn list_books_handler(db_pool: DBPool) -> Result<impl Reply> {
     ))
 }
 
-pub async fn list_book_handler(id: i32, db_pool: DBPool) -> Result<impl Reply> {
+pub async fn list_book_handler(uid: String, id: i32, db_pool: DBPool) -> Result<impl Reply> {
     let book = db::fetch_book(&db_pool, id)
         .await
         .map_err(|e| reject::custom(e))?;
     Ok(json(&BookResponse::of(book)))
 }
 
-pub async fn create_book_handler(body: BookRequest, db_pool: DBPool) -> Result<impl Reply> {
+pub async fn create_book_handler(
+    uid: String,
+    body: BookRequest,
+    db_pool: DBPool,
+) -> Result<impl Reply> {
     Ok(json(&BookResponse::of(
         db::create_book(&db_pool, body)
             .await
@@ -37,6 +41,7 @@ pub async fn create_book_handler(body: BookRequest, db_pool: DBPool) -> Result<i
 }
 
 pub async fn update_book_handler(
+    uid: String,
     id: i32,
     body: BookRequest,
     db_pool: DBPool,
@@ -48,7 +53,7 @@ pub async fn update_book_handler(
     )))
 }
 
-pub async fn delete_book_handler(id: i32, db_pool: DBPool) -> Result<impl Reply> {
+pub async fn delete_book_handler(uid: String, id: i32, db_pool: DBPool) -> Result<impl Reply> {
     db::delete_book(&db_pool, id)
         .await
         .map_err(|e| reject::custom(e))?;
